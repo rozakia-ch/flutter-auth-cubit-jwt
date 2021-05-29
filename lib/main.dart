@@ -2,7 +2,6 @@ import 'package:auth_app/constants/color_constants.dart';
 import 'package:auth_app/ui/pages/welcome_page.dart';
 import 'package:auth_app/ui/router/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
