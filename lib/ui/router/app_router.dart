@@ -1,3 +1,4 @@
+import 'package:auth_app/ui/pages/home_page.dart';
 import 'package:auth_app/ui/pages/login_page.dart';
 import 'package:auth_app/ui/pages/register_page.dart';
 import 'package:auth_app/ui/pages/welcome_page.dart';
@@ -12,6 +13,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => LoginPage());
       case '/register-page':
         return MaterialPageRoute(builder: (context) => RegisterPage());
+      case '/home-page':
+        return MaterialPageRoute(builder: (context) => HomePage());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

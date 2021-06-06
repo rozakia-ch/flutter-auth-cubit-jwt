@@ -1,5 +1,6 @@
-import 'package:auth_app/constants/color_constants.dart';
+import 'package:auth_app/ui/themes/styles.dart' as style;
 import 'package:auth_app/ui/widgets/have_an_account_check.dart';
+import 'package:auth_app/ui/widgets/media_query_container.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
 import 'package:auth_app/ui/widgets/social_icon.dart';
 import 'package:auth_app/ui/widgets/textfield_container.dart';
@@ -11,10 +12,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.5),
-      ),
+    return MediaQueryContainer(
       child: Scaffold(
         body: _Background(
           child: SingleChildScrollView(
@@ -29,28 +27,34 @@ class RegisterPage extends StatelessWidget {
                 ),
                 TextFieldContainer(
                   child: TextField(
-                    cursorColor: ColorConstant.primaryColor,
+                    cursorColor: style.primaryColor,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
+                      fillColor: style.primaryLightColor,
+                      filled: true,
                       hintText: "Your Email",
-                      prefixIcon: Icon(Icons.person, color: ColorConstant.primaryColor),
-                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.person, color: style.primaryColor),
+                      border: style.fieldInputBorder,
                     ),
                   ),
                 ),
                 TextFieldContainer(
                   child: TextField(
-                    cursorColor: ColorConstant.primaryColor,
+                    cursorColor: style.primaryColor,
                     obscureText: true,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
+                      fillColor: style.primaryLightColor,
+                      filled: true,
                       hintText: "Password",
-                      prefixIcon: Icon(Icons.lock, color: ColorConstant.primaryColor),
-                      suffixIcon: Icon(Icons.visibility, color: ColorConstant.primaryColor),
-                      border: InputBorder.none,
+                      prefixIcon: Icon(Icons.lock, color: style.primaryColor),
+                      suffixIcon: Icon(Icons.visibility, color: style.primaryColor),
+                      border: style.fieldInputBorder,
                     ),
                   ),
                 ),
                 RoundedButton(
-                  backgroundColor: ColorConstant.primaryColor,
+                  backgroundColor: style.primaryColor,
                   title: "Register",
                   onPressed: () {},
                 ),
@@ -143,7 +147,7 @@ class _OrDivider extends StatelessWidget {
             child: Text(
               "OR",
               style: TextStyle(
-                color: ColorConstant.primaryColor,
+                color: style.primaryColor,
                 fontWeight: FontWeight.w600,
               ),
             ),

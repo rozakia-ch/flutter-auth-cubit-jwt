@@ -1,63 +1,129 @@
-import 'package:auth_app/constants/color_constants.dart';
+import 'package:auth_app/cubit/auth/auth_cubit.dart';
+import 'package:auth_app/cubit/login/login_cubit.dart';
+import 'package:auth_app/ui/themes/styles.dart' as style;
 import 'package:auth_app/ui/widgets/have_an_account_check.dart';
+import 'package:auth_app/ui/widgets/media_query_container.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
 import 'package:auth_app/ui/widgets/textfield_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    emailController.dispose();
+    passController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.5),
-      ),
+    final AuthCubit _authCubit = BlocProvider.of<AuthCubit>(context);
+
+    return MediaQueryContainer(
       child: Scaffold(
         body: _Background(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("LOGIN", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: _size.height * 0.05),
-                Image.asset(
-                  "assets/icons/login.png",
-                  height: _size.height * 0.35,
-                ),
-                TextFieldContainer(
-                  child: TextField(
-                    cursorColor: ColorConstant.primaryColor,
-                    decoration: InputDecoration(
-                      hintText: "Your Email",
-                      prefixIcon: Icon(Icons.person, color: ColorConstant.primaryColor),
-                      border: InputBorder.none,
+          child: BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              if (state is AuthData)
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  "/home-page",
+                  (Route<dynamic> route) => false,
+                );
+            },
+            child: BlocProvider(
+              create: (context) => LoginCubit(authCubit: _authCubit),
+              child: BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) {
+                  print(state);
+                  return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("LOGIN", style: TextStyle(fontWeight: FontWeight.bold)),
+                        SizedBox(height: _size.height * 0.05),
+                        Image.asset(
+                          "assets/icons/login.png",
+                          height: _size.height * 0.35,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 10.0),
+                          width: _size.width * 0.8,
+                          child: TextField(
+                            controller: emailController,
+                            cursorColor: style.primaryColor,
+                            autofocus: false,
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
+                              fillColor: style.primaryLightColor,
+                              filled: true,
+                              hintText: "Your Email",
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.only(left: 20.0, right: 10.0),
+                                child: Icon(Icons.person, color: style.primaryColor),
+                              ),
+                              border: style.fieldInputBorder,
+                              errorText: state is LoginFailed
+                                  ? state.email != ""
+                                      ? state.email
+                                      : null
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        TextFieldContainer(
+                          child: TextField(
+                            controller: passController,
+                            cursorColor: style.primaryColor,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
+                              fillColor: style.primaryLightColor,
+                              filled: true,
+                              hintText: "Password",
+                              prefixIcon: Icon(Icons.lock, color: style.primaryColor),
+                              suffixIcon: Icon(Icons.visibility, color: style.primaryColor),
+                              border: style.fieldInputBorder,
+                              errorText: state is LoginFailed
+                                  ? state.password != ""
+                                      ? state.password
+                                      : null
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        RoundedButton(
+                          backgroundColor: style.primaryColor,
+                          title: "LOGIN",
+                          onPressed: () {
+                            BlocProvider.of<LoginCubit>(context).login(
+                              email: emailController.text,
+                              password: passController.text,
+                            );
+                          },
+                        ),
+                        SizedBox(height: _size.height * 0.05),
+                        HaveAnAccountCheck(
+                          onTap: () => Navigator.pushNamed(context, "/register-page"),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                TextFieldContainer(
-                  child: TextField(
-                    cursorColor: ColorConstant.primaryColor,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      prefixIcon: Icon(Icons.lock, color: ColorConstant.primaryColor),
-                      suffixIcon: Icon(Icons.visibility, color: ColorConstant.primaryColor),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-                RoundedButton(
-                  backgroundColor: ColorConstant.primaryColor,
-                  title: "LOGIN",
-                  onPressed: () {},
-                ),
-                SizedBox(height: _size.height * 0.05),
-                HaveAnAccountCheck(
-                  onTap: () => Navigator.pushNamed(context, "/register-page"),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
           ),
         ),

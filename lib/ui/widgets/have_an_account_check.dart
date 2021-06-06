@@ -1,4 +1,4 @@
-import 'package:auth_app/constants/color_constants.dart';
+import 'package:auth_app/ui/themes/styles.dart' as style;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class HaveAnAccountCheck extends StatelessWidget {
             text: isLoginPage ? "Register" : "Login",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              color: ColorConstant.primaryColor,
+              color: style.primaryColor,
             ),
             recognizer: TapGestureRecognizer()..onTap = onTap,
           ),

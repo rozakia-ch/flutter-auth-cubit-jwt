@@ -1,4 +1,4 @@
-import 'package:auth_app/constants/color_constants.dart';
+import 'package:auth_app/ui/themes/styles.dart' as style;
 import 'package:flutter/material.dart';
 
 class SocialIcon extends StatelessWidget {
@@ -15,7 +15,7 @@ class SocialIcon extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,
-            color: ColorConstant.primaryLightColor,
+            color: style.primaryLightColor,
           ),
           shape: BoxShape.circle,
         ),

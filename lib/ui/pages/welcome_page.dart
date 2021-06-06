@@ -1,5 +1,6 @@
+import 'package:auth_app/ui/themes/styles.dart' as style;
+import 'package:auth_app/ui/widgets/media_query_container.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
-import 'package:auth_app/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -8,10 +9,7 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(
-        textScaleFactor: MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.5),
-      ),
+    return MediaQueryContainer(
       child: Scaffold(
         body: _Background(
           child: SingleChildScrollView(
@@ -27,12 +25,12 @@ class WelcomePage extends StatelessWidget {
                 SizedBox(height: _size.height * 0.05),
                 RoundedButton(
                   title: "Login",
-                  backgroundColor: ColorConstant.primaryColor,
+                  backgroundColor: style.primaryColor,
                   onPressed: () => Navigator.pushNamed(context, "/login-page"),
                 ),
                 RoundedButton(
                   title: "Register",
-                  backgroundColor: ColorConstant.primaryLightColor,
+                  backgroundColor: style.primaryLightColor,
                   onPressed: () => Navigator.pushNamed(context, "/register-page"),
                 ),
               ],
