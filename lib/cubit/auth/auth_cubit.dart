@@ -1,3 +1,6 @@
+import 'package:auth_app/models/profile_response.dart';
+import 'package:auth_app/models/refresh_token_response.dart';
+import 'package:auth_app/models/user.dart';
 import 'package:auth_app/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -14,28 +17,40 @@ class AuthCubit extends Cubit<AuthState> {
     var jwtToken = await _authRepo.getToken();
     if (jwtToken != null) {
       bool hasExpired = JwtDecoder.isExpired(jwtToken);
-      if (hasExpired) _refreshToken(jwtToken);
-      emit(AuthData());
+      if (hasExpired) refreshToken(jwtToken);
+      authHasToken();
     } else {
       emit(AuthFailed());
     }
   }
 
-  void _refreshToken(String jwtToken) async {
+  void refreshToken(String jwtToken) async {
     try {
-      // AuthResponse response = await _authRepo.refreshTokenRepository(jwtToken);
-      emit(AuthData());
+      RefreshTokenResponse response = await _authRepo.refreshTokenRepository(jwtToken);
+      await _authRepo.saveToken(response.data!.token!.accessToken!);
+      authHasToken();
     } catch (e) {
       print(e);
     }
   }
 
-  void authHasToken({required String jwtToken}) async {
+  void authLogin({required String jwtToken}) async {
     await _authRepo.saveToken(jwtToken);
-    emit(AuthData());
+    authHasToken();
+  }
+
+  void authHasToken() async {
+    try {
+      String jwtToken = await _authRepo.getToken();
+      ProfileResponse response = await _authRepo.userProfileRepository(jwtToken);
+      emit(AuthData(userProfile: response.data!.user!));
+    } catch (e) {
+      print(e);
+    }
   }
 
   void authLogout() async {
+    emit(AuthLoading());
     await _authRepo.removeToken();
     emit(AuthInitial());
   }

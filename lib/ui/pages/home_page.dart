@@ -12,20 +12,29 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthCubit _authCubit = BlocProvider.of<AuthCubit>(context);
     return MediaQueryContainer(
-      child: BlocListener<AuthCubit, AuthState>(
+      child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           Navigator.pushNamedAndRemoveUntil(context, "/login-page", (route) => false);
         },
-        child: Scaffold(
+        builder: (context, state) => Scaffold(
           body: Container(
             width: double.infinity,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  state is AuthData ? state.userProfile.name! : "Nothing",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0, letterSpacing: 1.5),
+                ),
+                Text(
+                  state is AuthData ? state.userProfile.email! : "Nothing",
+                  style: TextStyle(fontWeight: FontWeight.w400, letterSpacing: 1.5),
+                ),
+                SizedBox(height: 20.0),
                 RoundedButton(
-                  backgroundColor: style.primaryColor,
-                  title: "LOGOUT",
-                  onPressed: () => _authCubit.authLogout(),
+                  backgroundColor: state is AuthLoading ? Colors.grey : style.primaryColor,
+                  title: state is AuthLoading ? "Processing.." : "LOGOUT",
+                  onPressed: state is AuthLoading ? () {} : () => _authCubit.authLogout(),
                 ),
               ],
             ),

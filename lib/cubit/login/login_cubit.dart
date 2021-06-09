@@ -11,10 +11,11 @@ class LoginCubit extends Cubit<LoginState> {
   final AuthRepository _authRepo = AuthRepository();
   final AuthCubit authCubit;
   void login({required String email, required String password}) async {
+    emit(LoginLoading());
     try {
       AuthResponse response = await _authRepo.loginRepository(email, password);
       if (response.success!) {
-        authCubit.authHasToken(jwtToken: response.data!.token!.accessToken!);
+        authCubit.authLogin(jwtToken: response.data!.token!.accessToken!);
         emit(LoginInitial());
       } else {
         var error = response.error!;

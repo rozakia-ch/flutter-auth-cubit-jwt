@@ -1,7 +1,5 @@
 import 'package:auth_app/cubit/auth/auth_cubit.dart';
-import 'package:auth_app/cubit/login/login_cubit.dart';
 import 'package:auth_app/ui/pages/home_page.dart';
-import 'package:auth_app/ui/pages/login_page.dart';
 import 'package:auth_app/ui/pages/welcome_page.dart';
 import 'package:auth_app/ui/router/app_router.dart';
 import 'package:auth_app/ui/themes/styles.dart' as style;
@@ -24,22 +22,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthCubit(),
-      child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          return MaterialApp(
-            title: 'Flutter Auth',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-              primaryColor: style.primaryColor,
-              scaffoldBackgroundColor: Colors.white,
-              textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
-              // brightness: Brightness.light,
-            ),
-            initialRoute: (state is AuthData) ? "/home-page" : "/",
-            onGenerateRoute: AppRouter.generateRoute,
-          );
-        },
+      child: MaterialApp(
+        title: 'Flutter Auth',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          primaryColor: style.primaryColor,
+          scaffoldBackgroundColor: Colors.white,
+          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+          // brightness: Brightness.light,
+        ),
+        // initialRoute: "/",
+        onGenerateRoute: AppRouter.generateRoute,
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthData) return HomePage();
+            if (state is AuthFailed) return WelcomePage();
+            return Scaffold(
+              body: Center(
+                child: Container(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

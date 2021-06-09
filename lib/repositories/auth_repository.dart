@@ -1,5 +1,7 @@
 import 'package:auth_app/constants/api_constants.dart';
 import 'package:auth_app/models/auth_response.dart';
+import 'package:auth_app/models/profile_response.dart';
+import 'package:auth_app/models/refresh_token_response.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,12 +26,21 @@ class AuthRepository {
     }
   }
 
+  Future userProfileRepository(String jwtToken) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS.copyWith(headers: ApiConstants.setHeaders(jwtToken)));
+    try {
+      Response response = await dio.get('/auth/profile');
+      return ProfileResponse.fromJson(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
+
   Future refreshTokenRepository(String jwtToken) async {
     var dio = Dio(ApiConstants.DIO_OPTIONS.copyWith(headers: ApiConstants.setHeaders(jwtToken)));
     try {
-      Response response = await dio.post('/auth/refresh-token');
-      if (response.data['success']) return AuthResponse.fromJson(response.data);
-      return AuthResponse.withError(response.data);
+      Response response = await dio.get('/auth/refresh-token');
+      return RefreshTokenResponse.fromJson(response.data);
     } on DioError catch (ex) {
       print(ex.message);
     }

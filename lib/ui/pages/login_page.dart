@@ -26,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  bool _hidePassword = true;
   @override
   Widget build(BuildContext context) {
     final Size _size = MediaQuery.of(context).size;
     final AuthCubit _authCubit = BlocProvider.of<AuthCubit>(context);
-
     return MediaQueryContainer(
       child: Scaffold(
         body: _Background(
@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
               create: (context) => LoginCubit(authCubit: _authCubit),
               child: BlocBuilder<LoginCubit, LoginState>(
                 builder: (context, state) {
-                  print(state);
                   return SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -88,14 +87,22 @@ class _LoginPageState extends State<LoginPage> {
                           child: TextField(
                             controller: passController,
                             cursorColor: style.primaryColor,
-                            obscureText: true,
+                            obscureText: _hidePassword,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
                               fillColor: style.primaryLightColor,
                               filled: true,
                               hintText: "Password",
                               prefixIcon: Icon(Icons.lock, color: style.primaryColor),
-                              suffixIcon: Icon(Icons.visibility, color: style.primaryColor),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.visibility,
+                                  color: _hidePassword ? style.primaryColor : Colors.blue,
+                                ),
+                                onPressed: () => setState(() {
+                                  _hidePassword = !_hidePassword;
+                                }),
+                              ),
                               border: style.fieldInputBorder,
                               errorText: state is LoginFailed
                                   ? state.password != ""
@@ -106,14 +113,16 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         RoundedButton(
-                          backgroundColor: style.primaryColor,
-                          title: "LOGIN",
-                          onPressed: () {
-                            BlocProvider.of<LoginCubit>(context).login(
-                              email: emailController.text,
-                              password: passController.text,
-                            );
-                          },
+                          backgroundColor: state is LoginLoading ? Colors.grey : style.primaryColor,
+                          title: state is LoginLoading ? "Processing" : "LOGIN",
+                          onPressed: state is LoginLoading
+                              ? () {}
+                              : () {
+                                  BlocProvider.of<LoginCubit>(context).login(
+                                    email: emailController.text,
+                                    password: passController.text,
+                                  );
+                                },
                         ),
                         SizedBox(height: _size.height * 0.05),
                         HaveAnAccountCheck(

@@ -9,6 +9,11 @@ class LoginInitial extends LoginState {
   List<Object> get props => [];
 }
 
+class LoginLoading extends LoginState {
+  @override
+  List<Object> get props => [];
+}
+
 // ignore: must_be_immutable
 class LoginFailed extends LoginState {
   String? email;
