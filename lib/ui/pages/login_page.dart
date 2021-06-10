@@ -5,6 +5,7 @@ import 'package:auth_app/ui/widgets/have_an_account_check.dart';
 import 'package:auth_app/ui/widgets/media_query_container.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
 import 'package:auth_app/ui/widgets/textfield_container.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,12 +52,51 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(height: _size.height * 0.1),
                         Text("LOGIN", style: TextStyle(fontWeight: FontWeight.bold)),
                         SizedBox(height: _size.height * 0.05),
                         Image.asset(
                           "assets/icons/login.png",
                           height: _size.height * 0.35,
                         ),
+                        if (state is LoginEmailNotVerified)
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 10.0),
+                            padding: const EdgeInsets.all(15.0),
+                            width: _size.width * 0.8,
+                            decoration: BoxDecoration(
+                              color: style.errorColor,
+                              borderRadius: BorderRadius.circular(29.0),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 10.0),
+                                Flexible(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: "${state.authResponse!.message!}\t",
+                                      style: TextStyle(color: Colors.white),
+                                      children: [
+                                        TextSpan(
+                                          text: 'click here to resend',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: style.primaryColor,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () => Navigator.pushNamed(context, "/resend-email"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 10.0),
                           width: _size.width * 0.8,
@@ -80,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                       ? state.email
                                       : null
                                   : null,
+                              errorMaxLines: 5,
                             ),
                           ),
                         ),

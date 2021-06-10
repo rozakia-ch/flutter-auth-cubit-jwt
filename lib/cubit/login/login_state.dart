@@ -23,3 +23,11 @@ class LoginFailed extends LoginState {
   @override
   List<Object?> get props => [email, password, message];
 }
+
+// ignore: must_be_immutable
+class LoginEmailNotVerified extends LoginState {
+  AuthResponse? authResponse;
+  LoginEmailNotVerified({this.authResponse});
+  @override
+  List<Object?> get props => [authResponse];
+}

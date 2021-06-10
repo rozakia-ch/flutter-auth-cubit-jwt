@@ -60,4 +60,23 @@ class AuthRepository {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("jwt_token");
   }
+
+  Future registerRepository(String? name, String? email, String? password, String? confPass) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS);
+    try {
+      var _formData = FormData.fromMap({
+        'name': name,
+        'email': email,
+        'password': password,
+        'password_confirmation': confPass,
+      });
+      Response response = await dio.post('/auth/register', data: _formData);
+      if (response.data['success'])
+        return AuthResponse.fromJson(response.data);
+      else
+        return AuthResponse.withError(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
 }

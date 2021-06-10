@@ -14,9 +14,14 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
     try {
       AuthResponse response = await _authRepo.loginRepository(email, password);
+
       if (response.success!) {
-        authCubit.authLogin(jwtToken: response.data!.token!.accessToken!);
-        emit(LoginInitial());
+        if (!response.data!.user!.emailVerified!) {
+          emit(LoginEmailNotVerified(authResponse: response));
+        } else {
+          authCubit.authLogin(jwtToken: response.data!.token!.accessToken!);
+          emit(LoginInitial());
+        }
       } else {
         var error = response.error!;
         emit(LoginFailed(
