@@ -1,3 +1,4 @@
+import 'package:auth_app/models/logout_response.dart';
 import 'package:auth_app/models/profile_response.dart';
 import 'package:auth_app/models/refresh_token_response.dart';
 import 'package:auth_app/models/user.dart';
@@ -51,7 +52,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   void authLogout() async {
     emit(AuthLoading());
-    await _authRepo.removeToken();
-    emit(AuthInitial());
+    String jwtToken = await _authRepo.getToken();
+    try {
+      LogoutResponse response = await _authRepo.logoutRepository(jwtToken);
+      if (response.success!) {
+        await _authRepo.removeToken();
+        emit(AuthInitial());
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }

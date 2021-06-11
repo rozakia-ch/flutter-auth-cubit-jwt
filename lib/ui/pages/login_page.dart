@@ -88,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                                             color: style.primaryColor,
                                           ),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () => Navigator.pushNamed(context, "/resend-email"),
+                                            ..onTap =
+                                                () => Navigator.pushNamed(context, "/resend-email-page"),
                                         ),
                                       ],
                                     ),
@@ -165,10 +166,18 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 },
                         ),
+                        TextButton(
+                          onPressed: () => Navigator.pushNamed(context, "/forgot-password-page"),
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(color: style.primaryColor),
+                          ),
+                        ),
                         SizedBox(height: _size.height * 0.05),
                         HaveAnAccountCheck(
                           onTap: () => Navigator.pushNamed(context, "/register-page"),
                         ),
+                        SizedBox(height: 10.0),
                       ],
                     ),
                   );

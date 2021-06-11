@@ -14,6 +14,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     required String password,
     required String confPass,
   }) async {
+    emit(RegisterLoading());
     try {
       AuthResponse response = await _authRepo.registerRepository(name, email, password, confPass);
       if (response.success!) {

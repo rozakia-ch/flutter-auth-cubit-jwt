@@ -52,7 +52,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   );
               },
               builder: (context, state) {
-                print(state);
                 return SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -144,14 +143,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       RoundedButton(
-                        backgroundColor: style.primaryColor,
-                        title: "Register",
-                        onPressed: () => BlocProvider.of<RegisterCubit>(context).register(
-                          name: nameController.text,
-                          email: emailController.text,
-                          password: passController.text,
-                          confPass: confPassController.text,
-                        ),
+                        backgroundColor: state is RegisterLoading ? Colors.grey : style.primaryColor,
+                        title: state is RegisterLoading ? "Processing" : "Register",
+                        onPressed: state is RegisterLoading
+                            ? () {}
+                            : () => BlocProvider.of<RegisterCubit>(context).register(
+                                  name: nameController.text,
+                                  email: emailController.text,
+                                  password: passController.text,
+                                  confPass: confPassController.text,
+                                ),
                       ),
                       SizedBox(height: _size.height * 0.05),
                       HaveAnAccountCheck(

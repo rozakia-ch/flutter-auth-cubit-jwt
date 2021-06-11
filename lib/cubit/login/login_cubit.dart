@@ -14,7 +14,6 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
     try {
       AuthResponse response = await _authRepo.loginRepository(email, password);
-
       if (response.success!) {
         if (!response.data!.user!.emailVerified!) {
           emit(LoginEmailNotVerified(authResponse: response));

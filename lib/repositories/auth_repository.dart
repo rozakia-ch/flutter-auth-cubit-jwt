@@ -1,7 +1,9 @@
 import 'package:auth_app/constants/api_constants.dart';
 import 'package:auth_app/models/auth_response.dart';
+import 'package:auth_app/models/logout_response.dart';
 import 'package:auth_app/models/profile_response.dart';
 import 'package:auth_app/models/refresh_token_response.dart';
+import 'package:auth_app/models/resend_mail_response.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,6 +77,32 @@ class AuthRepository {
         return AuthResponse.fromJson(response.data);
       else
         return AuthResponse.withError(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
+
+  Future logoutRepository(String jwtToken) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS.copyWith(headers: ApiConstants.setHeaders(jwtToken)));
+    try {
+      Response response = await dio.get('/auth/logout');
+      return LogoutResponse.fromJson(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
+
+  Future resendMailRepository(String? email) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS);
+    try {
+      var _formData = FormData.fromMap({
+        'email': email,
+      });
+      Response response = await dio.post('/auth/resend-mail-verification', data: _formData);
+      if (response.data['success'])
+        return ResendMailResponse.fromJson(response.data);
+      else
+        return ResendMailResponse.withError(response.data);
     } on DioError catch (ex) {
       print(ex.message);
     }

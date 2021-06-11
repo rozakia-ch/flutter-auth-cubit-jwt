@@ -9,6 +9,11 @@ class RegisterInitial extends RegisterState {
   List<Object> get props => [];
 }
 
+class RegisterLoading extends RegisterState {
+  @override
+  List<Object> get props => [];
+}
+
 // ignore: must_be_immutable
 class RegisterFailed extends RegisterState {
   String? name;
