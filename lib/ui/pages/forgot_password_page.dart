@@ -1,8 +1,11 @@
+import 'package:auth_app/ui/widgets/dialog_box.dart';
 import 'package:auth_app/ui/widgets/media_query_container.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
 import 'package:auth_app/ui/widgets/textfield_container.dart';
 import 'package:flutter/material.dart';
 import 'package:auth_app/ui/themes/styles.dart' as style;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auth_app/cubit/forgot_password/forgot_password_cubit.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -26,41 +29,62 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return MediaQueryContainer(
       child: Scaffold(
         body: _Background(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Forgot Password", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 10.0),
-                Image.asset(
-                  "assets/icons/login.png",
-                  height: _size.height * 0.3,
-                ),
-                TextFieldContainer(
-                  child: TextField(
-                    controller: emailController,
-                    cursorColor: style.primaryColor,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
-                      fillColor: style.primaryLightColor,
-                      filled: true,
-                      hintText: "Your Email",
-                      prefixIcon: Icon(Icons.person, color: style.primaryColor),
-                      border: style.fieldInputBorder,
-                      // errorText: state is RegisterFailed
-                      //     ? state.email != ""
-                      //         ? state.email
-                      //         : null
-                      //     : null,
+          child: BlocProvider(
+            create: (context) => ForgotPasswordCubit(),
+            child: BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
+              listener: (context, state) {
+                if (state is ForgotPasswordSuccess)
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => DialogBox(
+                      title: "Resend Email successfully",
+                      descriptions: state.message,
+                      text: "Yes",
                     ),
+                  );
+              },
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Forgot Password", style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 10.0),
+                      Image.asset(
+                        "assets/icons/login.png",
+                        height: _size.height * 0.3,
+                      ),
+                      TextFieldContainer(
+                        child: TextField(
+                          controller: emailController,
+                          cursorColor: style.primaryColor,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 15.0).copyWith(right: 20.0),
+                            fillColor: style.primaryLightColor,
+                            filled: true,
+                            hintText: "Your Email",
+                            prefixIcon: Icon(Icons.person, color: style.primaryColor),
+                            border: style.fieldInputBorder,
+                            errorText: state is ForgotPasswordFailed
+                                ? state.message != ""
+                                    ? state.message
+                                    : null
+                                : null,
+                          ),
+                        ),
+                      ),
+                      RoundedButton(
+                        backgroundColor: state is ForgotPasswordLoading ? Colors.grey : style.primaryColor,
+                        title: state is ForgotPasswordLoading ? "Processing" : "Forgot Password",
+                        onPressed: state is ForgotPasswordLoading
+                            ? () {}
+                            : () => BlocProvider.of<ForgotPasswordCubit>(context)
+                                .forgotPassword(email: emailController.text),
+                      ),
+                    ],
                   ),
-                ),
-                RoundedButton(
-                  backgroundColor: style.primaryColor,
-                  title: "Forgot Password",
-                  onPressed: () {},
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),

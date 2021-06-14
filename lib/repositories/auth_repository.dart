@@ -1,5 +1,6 @@
 import 'package:auth_app/constants/api_constants.dart';
 import 'package:auth_app/models/auth_response.dart';
+import 'package:auth_app/models/forgot_password_response.dart';
 import 'package:auth_app/models/logout_response.dart';
 import 'package:auth_app/models/profile_response.dart';
 import 'package:auth_app/models/refresh_token_response.dart';
@@ -99,10 +100,20 @@ class AuthRepository {
         'email': email,
       });
       Response response = await dio.post('/auth/resend-mail-verification', data: _formData);
-      if (response.data['success'])
-        return ResendMailResponse.fromJson(response.data);
-      else
-        return ResendMailResponse.withError(response.data);
+      return ResendMailResponse.fromJson(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
+
+  Future forgotPasswordRepository(String? email) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS);
+    try {
+      var _formData = FormData.fromMap({
+        'email': email,
+      });
+      Response response = await dio.post('/auth/forgot-password', data: _formData);
+      return ForgotPasswordResponse.fromJson(response.data);
     } on DioError catch (ex) {
       print(ex.message);
     }
