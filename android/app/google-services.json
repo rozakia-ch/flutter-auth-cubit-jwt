@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "72819887680",
+    "firebase_url": "https://credible-bank-235605.firebaseio.com",
+    "project_id": "credible-bank-235605",
+    "storage_bucket": "credible-bank-235605.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72819887680:android:fedab09468cbacc69459a5",
+        "android_client_info": {
+          "package_name": "com.auth.app.auth_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72819887680-ko542i1ubd4lf8ulgberdja8kpuk4djr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmeF86nLS85Wje5iWTwPY-AXESrfXuiIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "72819887680-ko542i1ubd4lf8ulgberdja8kpuk4djr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72819887680:android:67375383162f65229459a5",
+        "android_client_info": {
+          "package_name": "com.flutter_fcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72819887680-ko542i1ubd4lf8ulgberdja8kpuk4djr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmeF86nLS85Wje5iWTwPY-AXESrfXuiIQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "72819887680-ko542i1ubd4lf8ulgberdja8kpuk4djr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

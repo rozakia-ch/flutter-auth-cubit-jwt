@@ -64,6 +64,38 @@ class AuthRepository {
     prefs.remove("jwt_token");
   }
 
+  Future getloginWithSocmed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("is_socmed");
+  }
+
+  Future loginWithSocmed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("is_socmed", true);
+  }
+
+  Future updateLoginWithSocmed() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("is_socmed", false);
+  }
+
+  Future loginWithGoogleRepository(String email, String name) async {
+    var dio = Dio(ApiConstants.DIO_OPTIONS);
+    try {
+      var _formData = FormData.fromMap({
+        'name': name,
+        'email': email,
+      });
+      Response response = await dio.post('/auth/login-with-google', data: _formData);
+      if (response.data['success'])
+        return AuthResponse.fromJson(response.data);
+      else
+        return AuthResponse.withError(response.data);
+    } on DioError catch (ex) {
+      print(ex.message);
+    }
+  }
+
   Future registerRepository(String? name, String? email, String? password, String? confPass) async {
     var dio = Dio(ApiConstants.DIO_OPTIONS);
     try {

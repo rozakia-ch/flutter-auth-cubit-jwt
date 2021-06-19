@@ -11,7 +11,7 @@ class ApiConstants {
   // ignore: non_constant_identifier_names
   static BaseOptions DIO_OPTIONS = BaseOptions(
     baseUrl: API_URL,
-    connectTimeout: 10000,
-    receiveTimeout: 5000,
+    connectTimeout: 30000,
+    receiveTimeout: 10000,
   );
 }

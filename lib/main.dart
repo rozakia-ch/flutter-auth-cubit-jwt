@@ -12,7 +12,7 @@ void main() {
   //   statusBarColor: Colors.white,
   //   statusBarBrightness: Brightness.dark,
   // ));
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

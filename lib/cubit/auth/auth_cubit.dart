@@ -1,3 +1,4 @@
+import 'package:auth_app/models/auth_response.dart';
 import 'package:auth_app/models/logout_response.dart';
 import 'package:auth_app/models/profile_response.dart';
 import 'package:auth_app/models/refresh_token_response.dart';
@@ -5,6 +6,7 @@ import 'package:auth_app/models/user.dart';
 import 'package:auth_app/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 part 'auth_state.dart';
@@ -13,7 +15,9 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial()) {
     authCheck();
   }
-  AuthRepository _authRepo = AuthRepository();
+  final AuthRepository _authRepo = AuthRepository();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   void authCheck() async {
     var jwtToken = await _authRepo.getToken();
     if (jwtToken != null) {
@@ -56,11 +60,30 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       LogoutResponse response = await _authRepo.logoutRepository(jwtToken);
       if (response.success!) {
+        bool isSocmed = await _authRepo.getloginWithSocmed();
+        print(isSocmed);
+        if (isSocmed) logoutWithGoogle();
         await _authRepo.removeToken();
         emit(AuthInitial());
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  void loginWithGoogle() async {
+    _googleSignIn.signIn().then((userData) async {
+      AuthResponse response = await _authRepo.loginWithGoogleRepository(
+        userData!.email,
+        userData.displayName!,
+      );
+      await _authRepo.loginWithSocmed();
+      authLogin(jwtToken: response.data!.token!.accessToken!);
+      // ignore: invalid_return_type_for_catch_error
+    }).catchError((e) => print(e));
+  }
+
+  void logoutWithGoogle() async {
+    _googleSignIn.signOut().then((userData) => _authRepo.updateLoginWithSocmed()).catchError((e) => print(e));
   }
 }

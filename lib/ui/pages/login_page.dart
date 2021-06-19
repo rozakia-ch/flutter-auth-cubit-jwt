@@ -1,8 +1,10 @@
 import 'package:auth_app/cubit/auth/auth_cubit.dart';
 import 'package:auth_app/cubit/login/login_cubit.dart';
 import 'package:auth_app/ui/themes/styles.dart' as style;
+import 'package:auth_app/ui/widgets/auth_with_socmed.dart';
 import 'package:auth_app/ui/widgets/have_an_account_check.dart';
 import 'package:auth_app/ui/widgets/media_query_container.dart';
+import 'package:auth_app/ui/widgets/or_divider.dart';
 import 'package:auth_app/ui/widgets/rounded_button.dart';
 import 'package:auth_app/ui/widgets/textfield_container.dart';
 import 'package:flutter/gestures.dart';
@@ -173,10 +175,12 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: style.primaryColor),
                           ),
                         ),
-                        SizedBox(height: _size.height * 0.05),
+                        SizedBox(height: 20.0),
                         HaveAnAccountCheck(
                           onTap: () => Navigator.pushNamed(context, "/register-page"),
                         ),
+                        OrDivider(),
+                        AuthWithSocmed(),
                         SizedBox(height: 10.0),
                       ],
                     ),
